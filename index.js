@@ -1,9 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const lockerRoutes = require("./routes/lockerRoutes");
 const corsOptions = require("./config/corsOptions");
 const authRoutes = require("./routes/authRoutes");
-const cookieParser = require("cookie-parser");
+const vehicleRoutes = require("./routes/vehicleRoutes");
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use(cookieParser());
 
 // Rutas principales
 app.use("/api/auth", authRoutes);
+app.use("/api/lockers", lockerRoutes);
+app.use("/api/vehicles", vehicleRoutes);
 
 // Servidor escuchando
 const PORT = process.env.PORT || 3000;
