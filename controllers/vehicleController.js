@@ -1,0 +1,30 @@
+const { registerVehicleEntry } = require("../models/vehicleModel");
+
+exports.entryVehicleController = async (req, res) => {
+  try {
+    const adminId = req.user.id_admin; // viene del token
+    const { placa, tipo, numeroLocker } = req.body;
+
+    if (!placa || !tipo || !numeroLocker) {
+      return res
+        .status(400)
+        .json({ message: "Todos los campos son requeridos." });
+    }
+
+    const result = await registerVehicleEntry(
+      adminId,
+      placa,
+      tipo,
+      numeroLocker
+    );
+
+    if (!result.success) {
+      return res.status(400).json({ message: result.message });
+    }
+
+    return res.status(200).json({ message: result.message });
+  } catch (error) {
+    console.error("Error en entryVehicleController:", error);
+    return res.status(500).json({ message: "Error interno del servidor." });
+  }
+};
