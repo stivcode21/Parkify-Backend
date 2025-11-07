@@ -171,3 +171,10 @@ exports.vehicleSearch = async (adminId, placa) => {
     return { success: false, message: "Error al buscar el vehículo." };
   }
 };
+
+exports.getRecordVehicles = async (adminId) => {
+  const [rows] = await db.query("SELECT * FROM historial WHERE id_admin = ?", [
+    adminId,
+  ]);
+  return rows;
+};
