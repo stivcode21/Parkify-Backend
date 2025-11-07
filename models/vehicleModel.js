@@ -153,3 +153,21 @@ exports.vehicleExit = async (adminId, placa, total) => {
     conn.release();
   }
 };
+
+exports.vehicleSearch = async (adminId, placa) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM vehiculos WHERE id_admin = ? AND placa = ?",
+      [adminId, placa]
+    );
+
+    if (rows.length === 0) {
+      return { success: false, message: "Vehículo no encontrado." };
+    }
+
+    return { success: true, vehicle: rows[0] };
+  } catch (error) {
+    console.error("Error en vehicleSearch:", error);
+    return { success: false, message: "Error al buscar el vehículo." };
+  }
+};
