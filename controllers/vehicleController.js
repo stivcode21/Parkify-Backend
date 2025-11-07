@@ -1,5 +1,9 @@
-const { registerVehicleEntry } = require("../models/vehicleModel");
-const { getListerVehicles } = require("../models/vehicleModel");
+const {
+  registerVehicleEntry,
+  vehicleExit,
+  getListerVehicles,
+  vehicleSearch,
+} = require("../models/vehicleModel");
 
 exports.entryVehicleController = async (req, res) => {
   try {
@@ -39,4 +43,17 @@ exports.listVehiclesController = async (req, res) => {
     console.error("Error en listVehiclesController:", error);
     return res.status(500).json({ message: "Error interno del servidor." });
   }
+};
+
+exports.exitVehicleController = async (req, res) => {
+  const { placa, total } = req.body;
+  const adminId = req.user.id_admin;
+
+  const result = await vehicleExit(adminId, placa, total);
+
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+
+  res.json(result);
 };
