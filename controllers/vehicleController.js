@@ -57,3 +57,19 @@ exports.exitVehicleController = async (req, res) => {
 
   res.json(result);
 };
+
+exports.searchVehicleController = async (req, res) => {
+  const { placa } = req.body;
+  const adminId = req.user.id_admin;
+
+  const result = await vehicleSearch(adminId, placa);
+
+  if (!result.success) {
+    return res.status(404).json({ message: result.message });
+  }
+
+  res.json({
+    message: "Vehículo encontrado.",
+    vehicle: result.vehicle,
+  });
+};
