@@ -87,3 +87,69 @@ exports.getListerVehicles = async (adminId) => {
   ]);
   return rows;
 };
+
+exports.vehicleExit = async (adminId, placa, total) => {
+  const conn = await db.getConnection();
+
+  try {
+    await conn.beginTransaction();
+
+    // busca el vehículo
+    const [vehiculos] = await conn.query(
+      "SELECT * FROM vehiculos WHERE id_admin = ? AND placa = ?",
+      [adminId, placa]
+    );
+
+    if (vehiculos.length === 0) {
+      return {
+        success: false,
+        message:
+          "No se encontró el vehículo con esa placa para este administrador.",
+      };
+    }
+
+    const vehiculo = vehiculos[0];
+
+    // insertar datos la tabla historial
+    await conn.query(
+      `INSERT INTO historial (id_admin, placa, tipo, numero_casillero, fecha_entrada, monto_total, fecha_salida)
+       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+      [
+        vehiculo.id_admin,
+        vehiculo.placa,
+        vehiculo.tipo,
+        vehiculo.id_casillero,
+        vehiculo.fecha_entrada,
+        total,
+      ]
+    );
+
+    await conn.query("DELETE FROM vehiculos WHERE id_admin = ? AND placa = ?", [
+      adminId,
+      placa,
+    ]);
+
+    // Marcar el casillero como disponible
+    await conn.query(
+      "UPDATE casilleros SET ocupado = 0, placa = NULL WHERE id_casillero = ? AND id_admin = ?",
+      [vehiculo.id_casillero, adminId]
+    );
+
+    await conn.commit();
+
+    return {
+      success: true,
+      message: "vehiculo eliminado del registro actual correctamente.",
+    };
+  } catch (error) {
+    await conn.rollback();
+    console.error("Error en registerVehicleExit:", error);
+    return {
+      success: false,
+      message: "Error al registrar la salida del vehículo.",
+      error,
+    };
+  } finally {
+    conn.release();
+  }
+};
