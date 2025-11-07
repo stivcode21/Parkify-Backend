@@ -44,7 +44,7 @@ exports.registerVehicleEntry = async (adminId, placa, tipo, numeroLocker) => {
     // Insertar el vehículo
     await conn.query(
       "INSERT INTO vehiculos (id_admin, id_casillero, placa, tipo) VALUES (?, ?, ?, ?)",
-      [adminId, idLocker, placa, tipo]
+      [adminId, numeroLocker, placa, tipo]
     );
 
     // Actualizar el casillero como ocupado y asignarle la placa
@@ -79,4 +79,11 @@ exports.registerVehicleEntry = async (adminId, placa, tipo, numeroLocker) => {
   } finally {
     conn.release(); // Liberar la conexión de la base de datos
   }
+};
+
+exports.getListerVehicles = async (adminId) => {
+  const [rows] = await db.query("SELECT * FROM vehiculos WHERE id_admin = ?", [
+    adminId,
+  ]);
+  return rows;
 };
