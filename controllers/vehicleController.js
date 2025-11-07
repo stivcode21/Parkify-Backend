@@ -3,6 +3,7 @@ const {
   vehicleExit,
   getListerVehicles,
   vehicleSearch,
+  getRecordVehicles,
 } = require("../models/vehicleModel");
 
 exports.entryVehicleController = async (req, res) => {
@@ -72,4 +73,15 @@ exports.searchVehicleController = async (req, res) => {
     message: "Vehículo encontrado.",
     vehicle: result.vehicle,
   });
+};
+
+exports.getRecordsController = async (req, res) => {
+  try {
+    const adminId = req.user.id_admin;
+    const vehicles = await getRecordVehicles(adminId);
+    return res.status(200).json({ vehicles });
+  } catch (error) {
+    console.error("Error en listVehiclesController:", error);
+    return res.status(500).json({ message: "Error interno del servidor." });
+  }
 };
