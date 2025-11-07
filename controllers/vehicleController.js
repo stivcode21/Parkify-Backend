@@ -1,4 +1,5 @@
 const { registerVehicleEntry } = require("../models/vehicleModel");
+const { getListerVehicles } = require("../models/vehicleModel");
 
 exports.entryVehicleController = async (req, res) => {
   try {
@@ -25,6 +26,17 @@ exports.entryVehicleController = async (req, res) => {
     return res.status(200).json({ message: result.message });
   } catch (error) {
     console.error("Error en entryVehicleController:", error);
+    return res.status(500).json({ message: "Error interno del servidor." });
+  }
+};
+
+exports.listVehiclesController = async (req, res) => {
+  try {
+    const adminId = req.user.id_admin; // viene del token
+    const vehicles = await getListerVehicles(adminId);
+    return res.status(200).json({ vehicles });
+  } catch (error) {
+    console.error("Error en listVehiclesController:", error);
     return res.status(500).json({ message: "Error interno del servidor." });
   }
 };
