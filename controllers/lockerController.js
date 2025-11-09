@@ -2,7 +2,7 @@ const { getLockersByAdminId } = require("../models/lockerModel");
 
 exports.getLockersController = async (req, res) => {
   try {
-    const adminId = req.user.id_admin; //viene del token
+    const adminId = req.user.id_admin;
 
     if (!adminId) {
       return res
