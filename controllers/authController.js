@@ -19,7 +19,7 @@ exports.loginController = async (req, res) => {
     }
 
     // Verificar contraseña (por ahora sin encriptar)
-    const isMatch = password === user.contraseña;
+    const isMatch = password === user.contrasena;
     if (!isMatch) {
       return res.status(401).json({ message: "Contraseña incorrecta." });
     }
