@@ -9,6 +9,9 @@ const vehicleRoutes = require("./routes/vehicleRoutes");
 
 const app = express();
 
+// Trust proxy so secure cookies work behind Render/HTTPS proxies
+app.set("trust proxy", 1);
+
 // Middleware global
 app.use(cors(corsOptions)); // Permite peticiones desde el frontend
 app.use(express.json()); // Permite recibir JSON en el body

@@ -31,11 +31,13 @@ exports.loginController = async (req, res) => {
       { expiresIn: "2h" }
     );
 
+    const isProd = process.env.NODE_ENV === "production";
+
     // Configurar cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 2 * 60 * 60 * 1000, // 2 horas
     });
 
