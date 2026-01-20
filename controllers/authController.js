@@ -56,6 +56,8 @@ exports.loginController = async (req, res) => {
 };
 
 exports.logoutController = (req, res) => {
+  const isProd = process.env.NODE_ENV === "production";
+
   res.clearCookie("token", {
     httpOnly: true,
     secure: isProd,
