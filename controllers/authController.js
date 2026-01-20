@@ -28,7 +28,7 @@ exports.loginController = async (req, res) => {
     const token = jwt.sign(
       { id_admin: user.id_admin, email: user.correo },
       process.env.JWT_SECRET,
-      { expiresIn: "2h" }
+      { expiresIn: "2h" },
     );
 
     const isProd = process.env.NODE_ENV === "production";
@@ -56,6 +56,11 @@ exports.loginController = async (req, res) => {
 };
 
 exports.logoutController = (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    path: "/",
+  });
   return res.status(200).json({ message: "Sesión cerrada correctamente." });
 };
