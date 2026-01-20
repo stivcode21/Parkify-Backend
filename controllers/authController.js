@@ -37,7 +37,7 @@ exports.loginController = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? "none" : "lax",
+      sameSite: "lax",
       maxAge: 2 * 60 * 60 * 1000, // 2 horas
     });
 
@@ -61,7 +61,7 @@ exports.logoutController = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: isProd,
-    sameSite: isProd ? "none" : "lax",
+    sameSite: "lax",
     path: "/",
   });
   return res.status(200).json({ message: "Sesión cerrada correctamente." });

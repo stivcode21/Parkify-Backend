@@ -8,12 +8,15 @@ const authRoutes = require("./routes/authRoutes");
 const vehicleRoutes = require("./routes/vehicleRoutes");
 
 const app = express();
+const isProd = process.env.NODE_ENV === "production";
 
 // Trust proxy so secure cookies work behind Render/HTTPS proxies
 app.set("trust proxy", 1);
 
 // Middleware global
-app.use(cors(corsOptions)); // Permite peticiones desde el frontend
+if (!isProd) {
+  app.use(cors(corsOptions)); // Permite peticiones desde el frontend
+}
 app.use(express.json()); // Permite recibir JSON en el body
 app.use(cookieParser());
 
