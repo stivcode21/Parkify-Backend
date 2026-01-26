@@ -47,6 +47,8 @@ exports.loginController = async (req, res) => {
       user: {
         id_admin: user.id,
         email: user.correo,
+        img: user.url_image,
+        name: user.username,
       },
     });
   } catch (error) {
@@ -65,4 +67,28 @@ exports.logoutController = (req, res) => {
     path: "/",
   });
   return res.status(200).json({ message: "Sesión cerrada correctamente." });
+};
+
+exports.getAdminController = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Buscar usuario
+    const user = await findAdminByEmail(email);
+    if (!user) {
+      return res.status(404).json({ message: "Correo no registrado." });
+    }
+
+    // Respuesta
+    return res.status(200).json({
+      user: {
+        img: user.image,
+        name: user.usuario,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Error en inicio de sesión:", error);
+    return res.status(500).json({ message: "Error interno del servidor." });
+  }
 };
